@@ -7,4 +7,5 @@ Route::get('/', function () {
     return Inertia::render('Landing');
 });
 
-Route::post('/leads', [\App\Http\Controllers\LeadController::class, 'store']);
+Route::post('/leads', [\App\Http\Controllers\LeadController::class, 'store'])
+    ->middleware('throttle:leads');
