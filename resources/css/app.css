@@ -1,0 +1,217 @@
+@import "tailwindcss";
+
+@source '../**/*.jsx';
+@source '../**/*.blade.php';
+
+/* ── Custom Theme ── */
+@theme {
+    --font-body: "Manrope", ui-sans-serif, system-ui, sans-serif;
+    --font-heading: "Cormorant", ui-serif, Georgia, serif;
+
+    --color-gold-50: #fff9e6;
+    --color-gold-100: #f5deb3;
+    --color-gold-200: #f0d08c;
+    --color-gold-300: #e8c36a;
+    --color-gold-400: #daa520;
+    --color-gold-500: #ffd700;
+    --color-gold-600: #c5961e;
+    --color-gold-700: #8b6914;
+    --color-gold-800: #8b4513;
+    --color-gold-900: #5c2d0a;
+
+    --color-dark: #0a0a0a;
+    --color-dark-100: #111111;
+    --color-dark-200: #1a1a1a;
+    --color-dark-300: #222222;
+    --color-dark-400: #2a2a2a;
+}
+
+/* ── Base Styles ── */
+@layer base {
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        font-family: var(--font-body);
+        background-color: var(--color-dark);
+        color: #e5e5e5;
+        overflow-x: hidden;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-family: var(--font-heading);
+    }
+
+    ::selection {
+        background-color: rgba(218, 165, 32, 0.3);
+        color: #ffd700;
+    }
+}
+
+/* ── Gold Gradient Text ── */
+@layer utilities {
+    .text-gold-gradient {
+        background: linear-gradient(
+            135deg,
+            #8b4513 0%,
+            #daa520 30%,
+            #ffd700 50%,
+            #f5deb3 70%,
+            #daa520 100%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .text-gold-shine {
+        background: linear-gradient(
+            90deg,
+            #daa520,
+            #ffd700,
+            #f5deb3,
+            #ffd700,
+            #daa520
+        );
+        background-size: 200% auto;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        animation: gold-shimmer 4s ease-in-out infinite;
+    }
+
+    .bg-gold-gradient {
+        background: linear-gradient(135deg, #8b4513, #daa520, #ffd700, #f5deb3);
+    }
+
+    .bg-gold-btn {
+        background: linear-gradient(
+            135deg,
+            #8b4513 0%,
+            #daa520 50%,
+            #ffd700 100%
+        );
+    }
+
+    .bg-gold-btn:hover {
+        background: linear-gradient(
+            135deg,
+            #daa520 0%,
+            #ffd700 50%,
+            #f5deb3 100%
+        );
+    }
+
+    .border-gold {
+        border-color: rgba(218, 165, 32, 0.3);
+    }
+
+    .glow-gold {
+        box-shadow:
+            0 0 20px rgba(218, 165, 32, 0.15),
+            0 0 60px rgba(218, 165, 32, 0.05);
+    }
+
+    .glow-gold-strong {
+        box-shadow:
+            0 0 30px rgba(255, 215, 0, 0.2),
+            0 0 80px rgba(218, 165, 32, 0.1);
+    }
+
+    .gold-line {
+        height: 1px;
+        background: linear-gradient(
+            90deg,
+            transparent,
+            #daa520,
+            #ffd700,
+            #daa520,
+            transparent
+        );
+    }
+}
+
+/* ── Animations ── */
+@keyframes gold-shimmer {
+    0%,
+    100% {
+        background-position: 0% center;
+    }
+    50% {
+        background-position: 200% center;
+    }
+}
+
+@keyframes float {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes fade-in-up {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse-gold {
+    0%,
+    100% {
+        box-shadow: 0 0 20px rgba(218, 165, 32, 0.15);
+    }
+    50% {
+        box-shadow: 0 0 40px rgba(255, 215, 0, 0.3);
+    }
+}
+
+.animate-float {
+    animation: float 6s ease-in-out infinite;
+}
+
+.animate-fade-in-up {
+    animation: fade-in-up 0.8s ease-out forwards;
+}
+
+.animate-pulse-gold {
+    animation: pulse-gold 3s ease-in-out infinite;
+}
+
+/* ── Particle canvas ── */
+#particles-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #0a0a0a;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #8b4513, #daa520);
+    border-radius: 3px;
+}
