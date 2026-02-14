@@ -155,10 +155,10 @@ export default function Footer() {
                     </p>
                     <div className="flex items-center gap-1">
                         <span className="text-gray-600 font-body text-xs">
-                            Powered by
+                            Developed by
                         </span>
                         <span className="text-gold-400/60 font-body text-xs font-semibold">
-                            Laravel + React + Inertia
+                            Muhammad Mifta
                         </span>
                     </div>
                 </div>

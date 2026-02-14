@@ -70,7 +70,7 @@ RUN mkdir -p storage/framework/{cache,sessions,views,testing} \
 RUN rm -rf node_modules tests .git \
     resources/js resources/css \
     vite.config.js package.json package-lock.json \
-    phpunit.xml .editorconfig
+    phpunit.xml .editorconfig .env
 
 EXPOSE 8000
 

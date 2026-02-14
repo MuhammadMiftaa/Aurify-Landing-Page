@@ -3,6 +3,12 @@ set -e
 
 echo "==> Aurify: Preparing application..."
 
+# Copy .env.example jika .env belum ada
+if [ ! -f .env ]; then
+    echo "==> Creating .env from .env.example..."
+    cp .env.example .env
+fi
+
 # Generate key if not set
 if [ -z "$APP_KEY" ]; then
     php artisan key:generate --force
