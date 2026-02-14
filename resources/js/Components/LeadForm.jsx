@@ -68,11 +68,11 @@ export default function LeadForm() {
                 <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
                     {/* Left – Copywriting */}
                     <div className="animate-fade-in-up">
-                        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-gold-400/20 bg-gold-400/5 mb-6">
+                        {/* <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-gold-400/20 bg-gold-400/5 mb-6">
                             <span className="text-gold-400 text-xs font-body tracking-wider uppercase">
-                                🎁 Lead Magnet Eksklusif
+                                Lead Magnet Eksklusif
                             </span>
-                        </div>
+                        </div> */}
                         <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 leading-tight">
                             <span className="text-gold-gradient">
                                 Akses Eksklusif:
@@ -256,12 +256,12 @@ export default function LeadForm() {
                                         Mengirim...
                                     </span>
                                 ) : (
-                                    "🎁 Kirim Template Sekarang!"
+                                    "Kirim Template Sekarang!"
                                 )}
                             </button>
 
                             <p className="text-gray-600 text-xs font-body text-center mt-4">
-                                🔒 Data Anda aman & tidak akan di-share ke pihak
+                                Data Anda aman & tidak akan di-share ke pihak
                                 ketiga.
                             </p>
                         </form>

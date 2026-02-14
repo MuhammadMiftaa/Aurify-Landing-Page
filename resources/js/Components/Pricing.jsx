@@ -102,7 +102,7 @@ function PriceCard({ plan, index }) {
             {plan.popular && (
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2">
                     <div className="bg-gold-btn text-dark font-body font-bold text-xs px-5 py-1.5 rounded-full shadow-lg shadow-gold-400/20">
-                        ⭐ PALING POPULER
+                        PALING POPULER
                     </div>
                 </div>
             )}

@@ -18,22 +18,22 @@ export default function Hero() {
                     {/* Left – Text */}
                     <div className="animate-fade-in-up">
                         {/* Badge */}
-                        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-gold-400/20 bg-gold-400/5 mb-8">
+                        {/* <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-gold-400/20 bg-gold-400/5 mb-8">
                             <span className="w-2 h-2 rounded-full bg-gold-500 animate-pulse" />
                             <span className="text-gold-400 text-xs font-body tracking-wider uppercase">
                                 Premium Financial Management
                             </span>
-                        </div>
+                        </div> */}
 
                         <h1 className="font-heading text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-[1.1] mb-6">
                             <span className="text-gold-gradient">Aurify:</span>{" "}
-                            <span className="text-white">
-                                Manajemen Finansial Premium yang Mengubah{" "}
-                            </span>
-                            <span className="text-gold-shine">Cash Flow</span>{" "}
-                            <span className="text-white">Anda Menjadi </span>
+                            <span className="text-white">Jadikan </span>
+                            <span className="text-gold-shine">
+                                Keuangan
+                            </span>{" "}
+                            <span className="text-white">Anda Lebih </span>
                             <span className="text-gold-gradient">
-                                Emas Stabil
+                                Berharga dan Stabil
                             </span>
                         </h1>
 
@@ -49,7 +49,7 @@ export default function Hero() {
                                 onClick={() => scrollTo("form")}
                                 className="bg-gold-btn text-dark font-body font-bold text-base px-8 py-4 rounded-xl hover:shadow-xl hover:shadow-gold-400/20 transition-all duration-300 hover:scale-105 animate-pulse-gold"
                             >
-                                🎁 Dapatkan Template Budgeting Gratis!
+                                Dapatkan Template Budgeting Gratis!
                             </button>
                             <button
                                 onClick={() => scrollTo("fitur")}

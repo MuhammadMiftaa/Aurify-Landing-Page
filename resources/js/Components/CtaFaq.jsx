@@ -109,7 +109,7 @@ export default function CtaFaq() {
                                     onClick={scrollToForm}
                                     className="bg-gold-btn text-dark font-body font-bold text-base px-10 py-4 rounded-xl hover:shadow-xl hover:shadow-gold-400/20 transition-all duration-300 hover:scale-105 animate-pulse-gold"
                                 >
-                                    🚀 Daftar Gratis Sekarang!
+                                    Daftar Gratis Sekarang!
                                 </button>
                                 <button
                                     onClick={scrollToForm}
