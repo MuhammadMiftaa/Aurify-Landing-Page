@@ -1,6 +1,7 @@
 # Aurify — Financial Management Landing Page
 
-[URL: https://aurify.miftech.web.id](https://aurify.miftech.web.id)
+[Landing Page (Leads Magnet) : https://aurify.miftech.web.id](https://aurify.miftech.web.id)
+[Admin Dashboard (Leads Management) : https://aurify.miftech.web.id/admin](https://aurify.miftech.web.id/admin)
 | Email            | Password   | Role  |
 | ---------------- | ---------- | ----- |
 | admin1@wafa.id   | admin123   | Admin |
