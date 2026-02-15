@@ -11,10 +11,12 @@ export default function Footer() {
                     {/* Brand */}
                     <div className="sm:col-span-2 lg:col-span-1">
                         <div className="flex items-center gap-3 mb-4">
-                            <div className="w-10 h-10 rounded-lg bg-gold-btn flex items-center justify-center shadow-lg shadow-gold-400/20">
-                                <span className="font-heading text-dark font-bold text-xl leading-none">
-                                    A
-                                </span>
+                            <div className="w-10 h-10 md:w-11 md:h-11 rounded-lg flex items-center justify-center shadow-lg group-hover:shadow-gold-400/40 transition-shadow duration-300">
+                                <img
+                                    src="/images/logo-transparent.png"
+                                    alt="Logo"
+                                    className="w-full h-full object-contain"
+                                />
                             </div>
                             <span className="text-gold-gradient font-heading text-2xl font-bold tracking-wide">
                                 Aurify

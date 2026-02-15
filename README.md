@@ -1,5 +1,10 @@
 # Aurify — Financial Management Landing Page
 
+```URL
+https://aurify.miftech.web.id
+```
+
+
 A premium SaaS financial management landing page with admin dashboard, built with Laravel, React, Inertia.js, and Tailwind CSS. Features a gold-themed design, lead capture form, and a full-featured admin panel powered by Filament.
 
 ## Table of Contents
