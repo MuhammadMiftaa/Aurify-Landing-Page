@@ -6,6 +6,7 @@ use App\Filament\Resources\ActivityLogResource\Pages;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Auth;
 use Spatie\Activitylog\Models\Activity;
 
 class ActivityLogResource extends Resource
@@ -21,6 +22,12 @@ class ActivityLogResource extends Resource
     protected static ?string $navigationGroup = 'System';
 
     protected static ?int $navigationSort = 10;
+
+    // Only admin can access this resource
+    public static function canAccess(): bool
+    {
+        return Auth::user()?->isAdmin() ?? false;
+    }
 
     public static function canCreate(): bool
     {

@@ -9,8 +9,10 @@ class AuthActivityLogger
 {
     public function handleLogin(Login $event): void
     {
+        /** @var \Illuminate\Database\Eloquent\Model $user */
+        $user = $event->user;
         activity('auth')
-            ->causedBy($event->user)
+            ->causedBy($user)
             ->withProperties([
                 'ip'         => request()->ip(),
                 'user_agent' => request()->userAgent(),
@@ -21,8 +23,10 @@ class AuthActivityLogger
     public function handleLogout(Logout $event): void
     {
         if ($event->user) {
+            /** @var \Illuminate\Database\Eloquent\Model $user */
+            $user = $event->user;
             activity('auth')
-                ->causedBy($event->user)
+                ->causedBy($user)
                 ->withProperties([
                     'ip' => request()->ip(),
                 ])

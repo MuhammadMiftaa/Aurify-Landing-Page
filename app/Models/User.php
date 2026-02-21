@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Role;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -17,6 +18,7 @@ class User extends Authenticatable implements FilamentUser
     protected $fillable = [
         'name',
         'email',
+        'role',
         'password',
     ];
 
@@ -29,7 +31,8 @@ class User extends Authenticatable implements FilamentUser
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'password'          => 'hashed',
+            'role'              => Role::class,
         ];
     }
 
@@ -38,10 +41,20 @@ class User extends Authenticatable implements FilamentUser
         return true;
     }
 
+    public function isAdmin(): bool
+    {
+        return $this->role === Role::Admin;
+    }
+
+    public function isStaff(): bool
+    {
+        return $this->role === Role::Staff;
+    }
+
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-            ->logOnly(['name', 'email'])
+            ->logOnly(['name', 'email', 'role'])
             ->logOnlyDirty()
             ->setDescriptionForEvent(fn(string $eventName) => "User has been {$eventName}");
     }

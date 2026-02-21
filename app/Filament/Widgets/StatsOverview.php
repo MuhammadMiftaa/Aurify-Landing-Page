@@ -5,6 +5,7 @@ namespace App\Filament\Widgets;
 use App\Models\Lead;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
+use Illuminate\Support\Facades\Auth;
 use Spatie\Activitylog\Models\Activity;
 
 class StatsOverview extends BaseWidget
@@ -13,7 +14,7 @@ class StatsOverview extends BaseWidget
 
     protected function getStats(): array
     {
-        return [
+        $stats = [
             Stat::make('Total Leads', Lead::count())
                 ->description('All time submissions')
                 ->descriptionIcon('heroicon-m-user-group')
@@ -36,11 +37,15 @@ class StatsOverview extends BaseWidget
                 ->description('Current week')
                 ->descriptionIcon('heroicon-m-calendar-days')
                 ->color('info'),
+        ];
 
-            Stat::make('Activity Logs', Activity::count())
+        if (Auth::user()?->isAdmin()) {
+            $stats[] = Stat::make('Activity Logs', Activity::count())
                 ->description('All recorded actions')
                 ->descriptionIcon('heroicon-m-clipboard-document-list')
-                ->color('gray'),
-        ];
+                ->color('gray');
+        }
+
+        return $stats;
     }
 }

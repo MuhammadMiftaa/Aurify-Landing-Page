@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\Role;
 use App\Filament\Resources\LeadResource\Pages;
 use App\Models\Lead;
 use Filament\Forms;
@@ -9,6 +10,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Auth;
 
 class LeadResource extends Resource
 {
@@ -23,6 +25,36 @@ class LeadResource extends Resource
     protected static ?string $navigationGroup = 'Lead Management';
 
     protected static ?int $navigationSort = 1;
+
+    // Both admin and staff can access this resource
+    public static function canAccess(): bool
+    {
+        return Auth::check();
+    }
+
+    // Only admin can create
+    public static function canCreate(): bool
+    {
+        return Auth::user()?->isAdmin() ?? false;
+    }
+
+    // Only admin can edit
+    public static function canEdit($record): bool
+    {
+        return Auth::user()?->isAdmin() ?? false;
+    }
+
+    // Only admin can delete
+    public static function canDelete($record): bool
+    {
+        return Auth::user()?->isAdmin() ?? false;
+    }
+
+    // Only admin can delete (bulk)
+    public static function canDeleteAny(): bool
+    {
+        return Auth::user()?->isAdmin() ?? false;
+    }
 
     public static function form(Form $form): Form
     {
@@ -116,12 +148,15 @@ class LeadResource extends Resource
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->visible(fn() => Auth::user()?->isAdmin()),
+                Tables\Actions\DeleteAction::make()
+                    ->visible(fn() => Auth::user()?->isAdmin()),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->visible(fn() => Auth::user()?->isAdmin()),
                 ]),
             ])
             ->emptyStateHeading('No leads yet')
