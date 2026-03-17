@@ -26,7 +26,7 @@ class ActivityLogResource extends Resource
     // Only admin can access this resource
     public static function canAccess(): bool
     {
-        return Auth::user()?->isAdmin() ?? false;
+        return Auth::user()?->isAdmin() || Auth::user()?->isSuperadmin() ?? false;
     }
 
     public static function canCreate(): bool

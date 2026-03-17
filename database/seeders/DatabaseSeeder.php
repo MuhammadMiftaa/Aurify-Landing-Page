@@ -12,6 +12,13 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         User::create([
+            'name'     => 'Super Admin',
+            'email'    => 'superadmin@wafa.id',
+            'role'     => Role::SuperAdmin,
+            'password' => Hash::make('admin123'),
+        ]);
+
+        User::create([
             'name'     => 'Admin One',
             'email'    => 'admin1@wafa.id',
             'role'     => Role::Admin,
