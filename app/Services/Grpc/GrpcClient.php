@@ -12,9 +12,9 @@ class GrpcClient
 
     public function __construct()
     {
-        $this->walletAddress      = config('rabbitmq.grpc.wallet_address');
-        $this->transactionAddress = config('rabbitmq.grpc.transaction_address');
-        $this->investmentAddress  = config('rabbitmq.grpc.investment_address');
+        $this->walletAddress      = config('grpc.wallet_address');
+        $this->transactionAddress = config('grpc.transaction_address');
+        $this->investmentAddress  = config('grpc.investment_address');
     }
 
     // ── Wallet Types ──
@@ -196,11 +196,12 @@ class GrpcClient
     private function callGrpc(string $address, string $method, string $jsonData): array
     {
         $protoPath = base_path('protobuf');
-        $parts     = explode('/', $method);
-        $service   = explode('.', $parts[0])[0]; // e.g. 'wallet'
+        $service   = explode('.', $method)[0]; // e.g. 'wallet'
+        $grpcurl   = config('grpc.grpcurl_path', '/home/mifta/go/bin/grpcurl');
 
         $cmd = sprintf(
-            'grpcurl -plaintext -import-path %s -proto %s/%s.proto -d %s %s %s 2>&1',
+            '%s -plaintext -import-path %s -proto %s/%s.proto -d %s %s %s 2>&1',
+            escapeshellarg($grpcurl),
             escapeshellarg($protoPath),
             escapeshellarg($service),
             escapeshellarg($service),
@@ -218,7 +219,7 @@ class GrpcClient
         $decoded = json_decode($output, true);
 
         if (json_last_error() !== JSON_ERROR_NONE) {
-            throw new \RuntimeException("gRPC call failed: invalid JSON response - " . trim($output));
+            throw new \RuntimeException("gRPC call failed: " . trim($output));
         }
 
         return $decoded;

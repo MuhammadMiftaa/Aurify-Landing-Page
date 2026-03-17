@@ -5,7 +5,6 @@ namespace App\Filament\Resources\WalletTypeResource\Pages;
 use App\Filament\Resources\WalletTypeResource;
 use App\Services\MasterDataService;
 use Filament\Resources\Pages\Page;
-use Filament\Actions;
 use Filament\Notifications\Notification;
 
 class CreateWalletType extends Page

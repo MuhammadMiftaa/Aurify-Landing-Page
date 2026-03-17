@@ -9,36 +9,27 @@ use Illuminate\Support\Facades\Log;
 
 class OutboxPublisher extends Command
 {
-    protected $signature = 'outbox:publish {--interval=60 : Polling interval in seconds}';
+    protected $signature = 'outbox:publish';
 
-    protected $description = 'Poll outbox_messages and publish pending messages to RabbitMQ';
+    protected $description = 'Publish pending outbox_messages to RabbitMQ (run via scheduler every minute)';
 
     public function handle(): int
     {
-        $interval = (int) $this->option('interval');
         $rabbitMQ = new RabbitMQService();
 
-        $this->info("Outbox publisher started (interval: {$interval}s)");
-        Log::info('outbox_publisher_started', [
-            'service'  => 'outbox',
-            'interval' => $interval,
-        ]);
+        Log::info('outbox_publisher_started', ['service' => 'outbox']);
 
-        while (true) {
-            try {
-                $this->publishPendingMessages($rabbitMQ);
-            } catch (\Exception $e) {
-                Log::error('outbox_publish_pending_failed', [
-                    'service' => 'outbox',
-                    'error'   => $e->getMessage(),
-                ]);
-                $this->error("Error: {$e->getMessage()}");
-
-                // Reconnect on next iteration
-                $rabbitMQ->disconnect();
-            }
-
-            sleep($interval);
+        try {
+            $this->publishPendingMessages($rabbitMQ);
+        } catch (\Exception $e) {
+            Log::error('outbox_publish_pending_failed', [
+                'service' => 'outbox',
+                'error'   => $e->getMessage(),
+            ]);
+            $this->error("Error: {$e->getMessage()}");
+            return self::FAILURE;
+        } finally {
+            $rabbitMQ->disconnect();
         }
 
         return self::SUCCESS;
@@ -55,7 +46,6 @@ class OutboxPublisher extends Command
         foreach ($messages as $message) {
             try {
                 $rabbitMQ->publish($message->event_type, $message->payload);
-
                 $message->markAsPublished();
 
                 Log::info('outbox_message_published', [

@@ -36,12 +36,20 @@ RUN apk add --no-cache \
         curl \
         icu-dev \
         oniguruma-dev \
+        libpq-dev \
     && docker-php-ext-install \
-        pdo_mysql \
+        pdo_pgsql \
+        pgsql \
         mbstring \
         intl \
         opcache \
+        sockets \
     && rm -rf /var/cache/apk/*
+
+# Install grpcurl
+RUN curl -sSLf https://github.com/fullstorydev/grpcurl/releases/download/v1.9.1/grpcurl_1.9.1_linux_amd64.tar.gz \
+    | tar -xz -C /usr/local/bin grpcurl \
+    && chmod +x /usr/local/bin/grpcurl
 
 # PHP production config
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"

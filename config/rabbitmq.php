@@ -17,10 +17,4 @@ return [
         'wallet_types'            => 'master.wallet_types',
         'transaction_categories'  => 'master.transaction_categories',
     ],
-
-    'grpc' => [
-        'wallet_address'      => env('GRPC_WALLET_ADDRESS', 'localhost:10001'),
-        'transaction_address' => env('GRPC_TRANSACTION_ADDRESS', 'localhost:10002'),
-        'investment_address'  => env('GRPC_INVESTMENT_ADDRESS', 'localhost:10003'),
-    ],
 ];
