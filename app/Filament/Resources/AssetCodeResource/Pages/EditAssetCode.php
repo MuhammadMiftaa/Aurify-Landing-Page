@@ -25,7 +25,7 @@ class EditAssetCode extends Page
     {
         $this->recordId = $record;
 
-        $grpc = new GrpcClient();
+        $grpc = GrpcClient::make();;
         $detail = $grpc->getAssetCodeDetail($record);
 
         if (empty($detail)) {

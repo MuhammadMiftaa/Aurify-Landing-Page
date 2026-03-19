@@ -42,7 +42,7 @@ class ListWalletTypes extends Page
 
     public function loadRecords(): void
     {
-        $grpc = new GrpcClient();
+        $grpc = GrpcClient::make();;
 
         // Handle "all" pageSize
         $pageSize = $this->pageSize === 'all' ? 9999 : (int) $this->pageSize;

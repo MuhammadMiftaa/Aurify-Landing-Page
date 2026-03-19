@@ -31,7 +31,7 @@ class CreateTransactionCategory extends Page
 
     public function loadParentCategories(): void
     {
-        $grpc = new GrpcClient();
+        $grpc = GrpcClient::make();;
         $result = $grpc->listCategories(
             page: 1,
             pageSize: 1000,

@@ -25,7 +25,7 @@ class EditWalletType extends Page
     {
         $this->recordId = $record;
 
-        $grpc = new GrpcClient();
+        $grpc = GrpcClient::make();;
         $detail = $grpc->getWalletTypeDetail($record);
 
         if ($detail) {
