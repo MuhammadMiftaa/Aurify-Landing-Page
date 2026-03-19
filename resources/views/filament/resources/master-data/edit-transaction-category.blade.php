@@ -3,6 +3,18 @@
         <div
             class="fi-fo-component-ctn rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10">
             <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                {{-- UUID (read-only) --}}
+                <div class="col-span-full">
+                    <label for="recordId" class="fi-fo-field-wrp-label inline-flex items-center gap-x-3">
+                        <span class="text-sm font-medium leading-6 text-gray-950 dark:text-white">UUID</span>
+                    </label>
+                    <div class="mt-1">
+                        <x-filament::input.wrapper>
+                            <x-filament::input type="text" wire:model="recordId" id="recordId" disabled />
+                        </x-filament::input.wrapper>
+                    </div>
+                </div>
+
                 {{-- Name --}}
                 <div class="col-span-full sm:col-span-1">
                     <label for="name" class="fi-fo-field-wrp-label inline-flex items-center gap-x-3">
@@ -42,15 +54,19 @@
                     </div>
                 </div>
 
-                {{-- Parent ID --}}
+                {{-- Parent Category --}}
                 <div class="col-span-full sm:col-span-1">
                     <label for="parentId" class="fi-fo-field-wrp-label inline-flex items-center gap-x-3">
-                        <span class="text-sm font-medium leading-6 text-gray-950 dark:text-white">Parent ID</span>
+                        <span class="text-sm font-medium leading-6 text-gray-950 dark:text-white">Parent Category</span>
                     </label>
                     <div class="mt-1">
                         <x-filament::input.wrapper>
-                            <x-filament::input type="text" wire:model="parentId" id="parentId"
-                                placeholder="Optional parent category UUID" />
+                            <x-filament::input.select wire:model="parentId" id="parentId">
+                                <option value="">No parent (root category)</option>
+                                @foreach ($parentCategories as $category)
+                                    <option value="{{ $category['id'] }}">{{ $category['name'] }}</option>
+                                @endforeach
+                            </x-filament::input.select>
                         </x-filament::input.wrapper>
                         @error('parentId')
                             <p class="mt-1 text-sm text-danger-600 dark:text-danger-400">{{ $message }}</p>

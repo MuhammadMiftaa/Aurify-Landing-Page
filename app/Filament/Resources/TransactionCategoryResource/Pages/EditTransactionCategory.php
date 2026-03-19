@@ -21,6 +21,8 @@ class EditTransactionCategory extends Page
     public string $type = '';
     public string $parentId = '';
 
+    public array $parentCategories = [];
+
     public function mount(string $record): void
     {
         $this->recordId = $record;
@@ -33,6 +35,27 @@ class EditTransactionCategory extends Page
             $this->type     = $detail['type'] ?? '';
             $this->parentId = $detail['parentId'] ?? $detail['parent_id'] ?? '';
         }
+
+        $this->loadParentCategories();
+    }
+
+    public function loadParentCategories(): void
+    {
+        $grpc = new GrpcClient();
+        $result = $grpc->listCategories(
+            page: 1,
+            pageSize: 1000,
+            sortBy: 'name',
+            sortOrder: 'asc',
+            search: '',
+        );
+
+        // Filter only parent categories (categories without parent_id) and exclude current record
+        $this->parentCategories = array_filter(
+            $result['categories'] ?? [],
+            fn($category) => (empty($category['parentId']) && empty($category['parent_id']))
+                && ($category['id'] ?? '') !== $this->recordId
+        );
     }
 
     public function save(): void

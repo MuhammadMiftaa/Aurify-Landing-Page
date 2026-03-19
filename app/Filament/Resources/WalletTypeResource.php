@@ -26,7 +26,27 @@ class WalletTypeResource extends Resource
 
     public static function canAccess(): bool
     {
-        return Auth::user()?->isAdmin() ?? false;
+        return Auth::user()?->isAdmin() || Auth::user()?->isSuperadmin() ?? false;
+    }
+
+    public static function canCreate(): bool
+    {
+        return Auth::user()?->isSuperadmin() ?? false;
+    }
+
+    public static function canEdit($record): bool
+    {
+        return Auth::user()?->isSuperadmin() ?? false;
+    }
+
+    public static function canDelete($record): bool
+    {
+        return Auth::user()?->isSuperadmin() ?? false;
+    }
+
+    public static function canDeleteAny(): bool
+    {
+        return Auth::user()?->isSuperadmin() ?? false;
     }
 
     public static function form(Form $form): Form

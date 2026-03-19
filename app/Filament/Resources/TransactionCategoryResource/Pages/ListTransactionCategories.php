@@ -16,7 +16,7 @@ class ListTransactionCategories extends Page
     protected static ?string $title = 'Transaction Categories';
 
     public int $page = 1;
-    public int $pageSize = 10;
+    public string|int $pageSize = 10;
     public string $search = '';
     public string $sortBy = 'created_at';
     public string $sortOrder = 'desc';
@@ -30,7 +30,7 @@ class ListTransactionCategories extends Page
         ['key' => 'id',         'label' => 'ID',          'sortable' => true],
         ['key' => 'name',       'label' => 'Name',        'sortable' => true],
         ['key' => 'type',       'label' => 'Type',        'sortable' => true],
-        ['key' => 'parentName', 'label' => 'Parent',      'sortable' => false],
+        ['key' => 'parentName', 'label' => 'Parent',      'sortable' => true],
         ['key' => 'createdAt',  'label' => 'Created',     'sortable' => true],
     ];
 
@@ -42,9 +42,13 @@ class ListTransactionCategories extends Page
     public function loadRecords(): void
     {
         $grpc = new GrpcClient();
+
+        // Handle "all" pageSize
+        $pageSize = $this->pageSize === 'all' ? 9999 : (int) $this->pageSize;
+
         $result = $grpc->listCategories(
             page: $this->page,
-            pageSize: $this->pageSize,
+            pageSize: $pageSize,
             sortBy: $this->sortBy,
             sortOrder: $this->sortOrder,
             search: $this->search,
@@ -53,11 +57,42 @@ class ListTransactionCategories extends Page
         $this->records    = $result['categories'] ?? [];
         $this->total      = $result['total'] ?? 0;
         $this->totalPages = $result['totalPages'] ?? $result['total_pages'] ?? 0;
+
+        // If "all", set totalPages to 1
+        if ($this->pageSize === 'all') {
+            $this->totalPages = 1;
+        }
     }
 
     public function updatedSearch(): void
     {
+        $this->resetAndReload();
+    }
+
+    public function updatedPageSize(): void
+    {
+        $this->resetAndReload();
+    }
+
+    public function updatedPage(): void
+    {
+        if ($this->page < 1) {
+            $this->page = 1;
+        } elseif ($this->page > $this->totalPages && $this->totalPages > 0) {
+            $this->page = $this->totalPages;
+        }
+        $this->loadRecords();
+    }
+
+    protected function resetAndReload(): void
+    {
         $this->page = 1;
+        $this->loadRecords();
+    }
+
+    public function goToPage(int $page): void
+    {
+        $this->page = $page;
         $this->loadRecords();
     }
 

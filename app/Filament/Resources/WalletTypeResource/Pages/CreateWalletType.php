@@ -6,6 +6,7 @@ use App\Filament\Resources\WalletTypeResource;
 use App\Services\MasterDataService;
 use Filament\Resources\Pages\Page;
 use Filament\Notifications\Notification;
+use Illuminate\Support\Str;
 
 class CreateWalletType extends Page
 {
@@ -15,23 +16,36 @@ class CreateWalletType extends Page
 
     protected static ?string $title = 'Create Wallet Type';
 
+    public string $uuid = '';
     public string $name = '';
     public string $type = '';
     public string $description = '';
 
+    public function generateUuid(): void
+    {
+        $this->uuid = Str::uuid()->toString();
+    }
+
     public function create(): void
     {
         $this->validate([
+            'uuid' => 'nullable|uuid',
             'name' => 'required|max:50',
             'type' => 'required|in:bank,e-wallet,physical,others',
         ]);
 
-        $service = new MasterDataService();
-        $service->createWalletType([
+        $data = [
             'name'        => $this->name,
             'type'        => $this->type,
             'description' => $this->description,
-        ]);
+        ];
+
+        if (!empty($this->uuid)) {
+            $data['id'] = $this->uuid;
+        }
+
+        $service = new MasterDataService();
+        $service->createWalletType($data);
 
         Notification::make()
             ->title('Wallet Type Queued')

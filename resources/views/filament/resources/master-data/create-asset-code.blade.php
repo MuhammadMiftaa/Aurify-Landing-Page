@@ -3,6 +3,27 @@
         <div
             class="fi-fo-component-ctn rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-900 dark:ring-white/10">
             <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                {{-- UUID --}}
+                <div class="col-span-full">
+                    <label for="uuid" class="fi-fo-field-wrp-label inline-flex items-center gap-x-3">
+                        <span class="text-sm font-medium leading-6 text-gray-950 dark:text-white">UUID</span>
+                    </label>
+                    <div class="mt-1 flex items-center gap-x-2">
+                        <x-filament::input.wrapper class="flex-1">
+                            <x-filament::input type="text" wire:model="uuid" id="uuid"
+                                placeholder="Leave empty to auto-generate" />
+                        </x-filament::input.wrapper>
+                        <x-filament::button type="button" wire:click="generateUuid" color="gray" size="sm">
+                            Generate
+                        </x-filament::button>
+                    </div>
+                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Optional. Leave empty to let the system
+                        generate one.</p>
+                    @error('uuid')
+                        <p class="mt-1 text-sm text-danger-600 dark:text-danger-400">{{ $message }}</p>
+                    @enderror
+                </div>
+
                 {{-- Code --}}
                 <div class="col-span-full sm:col-span-1">
                     <label for="code" class="fi-fo-field-wrp-label inline-flex items-center gap-x-3">
