@@ -7,8 +7,8 @@ stages:
 
 variables:
   TAG_IMAGE: $CI_COMMIT_TAG
- 
-build:
+
+build-refina-landing-page:
   stage: build
   image: docker:latest
   services:
@@ -18,19 +18,19 @@ build:
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   script:
-    - echo "Building application..."
-    - docker build -t "$CI_REGISTRY_IMAGE/app:$TAG_IMAGE" .
-    - docker push "$CI_REGISTRY_IMAGE/app" --all-tags
-    - echo "$CI_JOB_ID" > app_build_job_id.txt
+    - echo "Building Refina Landing Page Application..."
+    - docker build -t "$CI_REGISTRY_IMAGE/refina-landing-page:$TAG_IMAGE" .
+    - docker push "$CI_REGISTRY_IMAGE/refina-landing-page:$TAG_IMAGE"
+    - echo "$CI_JOB_ID" > refina-landing-page_build_job_id.txt
   artifacts:
     paths:
-      - app_build_job_id.txt
+      - refina-landing-page_build_job_id.txt
 
 release:
   stage: release
   image: registry.gitlab.com/gitlab-org/release-cli:latest
   needs:
-    - job: build
+    - job: build-refina-landing-page
       artifacts: true
   rules:
     - if: $CI_COMMIT_TAG =~ /^v[0-9]{4}\.[0-9]{1,3}$/
@@ -38,11 +38,11 @@ release:
     RELEASE_TITLE: "Release ${CI_COMMIT_TAG}"
     RELEASE_DESC: "Tagged after commit ${CI_COMMIT_SHORT_SHA}, message ${CI_COMMIT_TAG_MESSAGE}"
   script:
-    - export APP_BUILD_JOB_ID="$(cat app_build_job_id.txt)"
-    - echo "create release ${CI_COMMIT_TAG} from jobs $APP_BUILD_JOB_ID"
+    - export REFINA_LANDING_PAGE_BUILD_JOB_ID="$(cat refina-landing-page_build_job_id.txt)"
+    - echo "create release ${CI_COMMIT_TAG} from jobs $REFINA_LANDING_PAGE_BUILD_JOB_ID"
     - release-cli create --name "${RELEASE_TITLE}" --description "${RELEASE_DESC}" --tag-name "${CI_COMMIT_TAG}"
 
-deploy:
+deploy-staging:
   stage: deploy
   image: alpine:latest
   rules:
@@ -58,11 +58,39 @@ deploy:
   script:
     - |
       ssh -p $SSH_PORT -o StrictHostKeyChecking=no ${SSH_USER}@${SSH_HOST} " 
-        export APP_IMAGE_PROD_APP=\"$CI_REGISTRY_IMAGE/app\" &&
-        export APP_IMAGE_PROD_APP_TAG=$CI_COMMIT_TAG &&
+        export STG_REFINA_LANDING_PAGE=\"$CI_REGISTRY_IMAGE/refina-landing-page\" &&
+        export STG_REFINA_LANDING_PAGE_TAG=$CI_COMMIT_TAG &&
 
-        cd ~/web/production/aurifylandingpage &&
+        cd ~/web/staging/refinamicroservices &&
 
         docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY &&
-        docker compose -f docker-compose.yml up -d --build
+        docker compose -f docker-compose.yml pull stg-refina-landing-page &&
+        docker compose -f docker-compose.yml up -d stg-refina-landing-page
       "
+
+deploy-production:
+  stage: deploy
+  image: alpine:latest
+  rules:
+    - if: $CI_COMMIT_TAG =~ /^v[0-9]{4}\.[0-9]{1,3}$/
+  before_script:
+    - "which ssh-agent || ( apk update && apk add --no-cache openssh)"
+    - mkdir -p ~/.ssh
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
+    - chmod 700 ~/.ssh/id_rsa
+    - eval "$(ssh-agent -s)"
+    - ssh-add ~/.ssh/id_rsa
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+  script:
+    - |
+      ssh -p $SSH_PORT -o StrictHostKeyChecking=no ${SSH_USER}@${SSH_HOST} " 
+        export PROD_REFINA_LANDING_PAGE=\"$CI_REGISTRY_IMAGE/refina-landing-page\" &&
+        export PROD_REFINA_LANDING_PAGE_TAG=$CI_COMMIT_TAG &&
+
+        cd ~/web/production/refinamicroservices &&
+
+        docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY &&
+        docker compose -f docker-compose.yml pull prod-refina-landing-page &&
+        docker compose -f docker-compose.yml up -d prod-refina-landing-page
+      "
+  when: manual
