@@ -47,11 +47,6 @@ RUN apk add --no-cache \
         sockets \
     && rm -rf /var/cache/apk/*
 
-# Install grpcurl
-RUN curl -sSLf https://github.com/fullstorydev/grpcurl/releases/download/v1.9.3/grpcurl_1.9.3_linux_x86_64.tar.gz \
-    | tar -xz -C /usr/local/bin grpcurl \
-    && chmod +x /usr/local/bin/grpcurl
-
 # PHP production config
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
