@@ -37,6 +37,7 @@ RUN apk add --no-cache \
         icu-dev \
         oniguruma-dev \
         libpq-dev \
+        linux-headers \
     && docker-php-ext-install \
         pdo_pgsql \
         pgsql \
