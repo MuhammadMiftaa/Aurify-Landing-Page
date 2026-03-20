@@ -29,7 +29,7 @@ RUN composer install \
 # ── Stage 3: Production image ──
 FROM php:8.3-fpm-alpine AS production
 
-# Install system deps + PHP extensions
+# Install build dependencies
 RUN apk add --no-cache \
         nginx \
         supervisor \
@@ -38,6 +38,9 @@ RUN apk add --no-cache \
         oniguruma-dev \
         libpq-dev \
         linux-headers \
+        autoconf \
+        g++ \
+        make \
     && docker-php-ext-install \
         pdo_pgsql \
         pgsql \
@@ -45,7 +48,10 @@ RUN apk add --no-cache \
         intl \
         opcache \
         sockets \
-    && rm -rf /var/cache/apk/*
+    && pecl install grpc protobuf \
+    && docker-php-ext-enable grpc protobuf \
+    && apk del autoconf g++ make \
+    && rm -rf /var/cache/apk/* /tmp/pear
 
 # PHP production config
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
