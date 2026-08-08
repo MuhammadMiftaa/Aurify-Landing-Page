@@ -60,6 +60,30 @@ return [
             'report' => false,
         ],
 
+        /*
+         * Master-data assets (wallet type logos) on the shared MinIO instance.
+         *
+         * `url` is the browser-facing host, which differs from `endpoint`: the
+         * container talks to MinIO over the internal network while the public
+         * URL is what gets stored on the wallet type and rendered in the app.
+         *
+         * Only the bucket named here is anonymously readable. Do not point this
+         * at refina-pfp or refina-transaction-attachments, which hold private
+         * user data.
+         */
+        'minio' => [
+            'driver' => 's3',
+            'key' => env('MINIO_KEY'),
+            'secret' => env('MINIO_SECRET'),
+            'region' => env('MINIO_REGION', 'us-east-1'),
+            'bucket' => env('MINIO_BUCKET', 'refina-wallet-types'),
+            'endpoint' => env('MINIO_ENDPOINT'),
+            'url' => rtrim((string) env('MINIO_PUBLIC_URL'), '/') . '/' . env('MINIO_BUCKET', 'refina-wallet-types'),
+            'use_path_style_endpoint' => true,
+            'throw' => true,
+            'report' => false,
+        ],
+
     ],
 
     /*

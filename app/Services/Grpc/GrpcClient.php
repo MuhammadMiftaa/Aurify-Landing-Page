@@ -114,6 +114,10 @@ class GrpcClient
                     'name'        => $wt->getName(),
                     'type'        => $wt->getType(),
                     'description' => $wt->getDescription(),
+                    // Must be mapped: the edit form republishes every field, so
+                    // anything missing here is published back as empty.
+                    'nature'      => $wt->getNature(),
+                    'icon_url'    => $wt->getIconUrl(),
                     'createdAt'   => $wt->getCreatedAt(),
                     'updatedAt'   => $wt->getUpdatedAt(),
                 ];
@@ -163,6 +167,8 @@ class GrpcClient
                 'name'        => $wt->getName(),
                 'type'        => $wt->getType(),
                 'description' => $wt->getDescription(),
+                'nature'      => $wt->getNature(),
+                'icon_url'    => $wt->getIconUrl(),
                 'createdAt'   => $wt->getCreatedAt(),
                 'updatedAt'   => $wt->getUpdatedAt(),
             ];

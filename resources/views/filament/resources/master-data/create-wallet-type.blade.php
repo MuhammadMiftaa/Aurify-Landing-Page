@@ -51,18 +51,66 @@
                     </label>
                     <div class="mt-1">
                         <x-filament::input.wrapper>
-                            <x-filament::input.select wire:model="type" id="type" required>
+                            <x-filament::input.select wire:model.live="type" id="type" required>
                                 <option value="">Select type...</option>
-                                <option value="bank">Bank</option>
-                                <option value="e-wallet">E-Wallet</option>
-                                <option value="physical">Physical</option>
-                                <option value="others">Others</option>
+                                @foreach (\App\Filament\Resources\WalletTypeResource::types() as $value => $label)
+                                    <option value="{{ $value }}">{{ $label }}</option>
+                                @endforeach
                             </x-filament::input.select>
                         </x-filament::input.wrapper>
                         @error('type')
                             <p class="mt-1 text-sm text-danger-600 dark:text-danger-400">{{ $message }}</p>
                         @enderror
                     </div>
+                </div>
+
+                {{-- Nature --}}
+                <div class="col-span-full sm:col-span-1">
+                    <label for="nature" class="fi-fo-field-wrp-label inline-flex items-center gap-x-3">
+                        <span class="text-sm font-medium leading-6 text-gray-950 dark:text-white">
+                            Nature <sup class="text-danger-600 dark:text-danger-400">*</sup>
+                        </span>
+                    </label>
+                    <div class="mt-1">
+                        <x-filament::input.wrapper>
+                            <x-filament::input.select wire:model="nature" id="nature" required>
+                                @foreach (\App\Filament\Resources\WalletTypeResource::natures() as $value => $label)
+                                    <option value="{{ $value }}">{{ $label }}</option>
+                                @endforeach
+                            </x-filament::input.select>
+                        </x-filament::input.wrapper>
+                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                            A liability holds a credit limit rather than money. Its balance is the credit still
+                            available, and it is excluded from the user's net worth.
+                        </p>
+                        @error('nature')
+                            <p class="mt-1 text-sm text-danger-600 dark:text-danger-400">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+
+                {{-- Logo --}}
+                <div class="col-span-full sm:col-span-1">
+                    <label for="logo" class="fi-fo-field-wrp-label inline-flex items-center gap-x-3">
+                        <span class="text-sm font-medium leading-6 text-gray-950 dark:text-white">Logo</span>
+                    </label>
+                    <div class="mt-1 flex items-center gap-x-3">
+                        @if ($logo)
+                            <img src="{{ $logo->temporaryUrl() }}" alt="Logo preview"
+                                class="h-12 w-12 rounded object-contain ring-1 ring-gray-950/10 dark:ring-white/10" />
+                        @endif
+                        <input type="file" wire:model="logo" id="logo" accept="image/png,image/jpeg,image/webp"
+                            class="block w-full text-sm text-gray-600 file:mr-3 file:rounded-lg file:border-0 file:bg-primary-600 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-white hover:file:bg-primary-500 dark:text-gray-400" />
+                    </div>
+                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                        Optional. PNG/JPG/WebP, max 512&nbsp;KB. Leave empty to use the default logo.
+                    </p>
+                    <div wire:loading wire:target="logo" class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                        Uploading&hellip;
+                    </div>
+                    @error('logo')
+                        <p class="mt-1 text-sm text-danger-600 dark:text-danger-400">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 {{-- Description --}}

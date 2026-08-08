@@ -24,6 +24,39 @@ class WalletTypeResource extends Resource
 
     protected static ?string $slug = 'master/wallet-types';
 
+    public const TYPE_CREDIT_CARD = 'credit_card';
+
+    public const NATURE_ASSET = 'asset';
+    public const NATURE_LIABILITY = 'liability';
+
+    /**
+     * Wallet type categories, mirroring model.WalletType in the wallet service.
+     * Single source of truth for the selects, the validation rules and the
+     * table filter, which previously drifted apart across five places.
+     */
+    public static function types(): array
+    {
+        return [
+            'bank' => 'Bank',
+            'e-wallet' => 'E-Wallet',
+            'physical' => 'Physical',
+            self::TYPE_CREDIT_CARD => 'Credit Card',
+            'others' => 'Others',
+        ];
+    }
+
+    /**
+     * Whether the wallet holds money or is a credit line. For a liability the
+     * balance is the credit still available, so it is kept out of net worth.
+     */
+    public static function natures(): array
+    {
+        return [
+            self::NATURE_ASSET => 'Asset (holds money)',
+            self::NATURE_LIABILITY => 'Liability (credit line)',
+        ];
+    }
+
     public static function canAccess(): bool
     {
         return Auth::user()?->isAdmin() || Auth::user()?->isSuperadmin() ?? false;
@@ -49,6 +82,12 @@ class WalletTypeResource extends Resource
         return Auth::user()?->isSuperadmin() ?? false;
     }
 
+    /**
+     * NOTE: this schema and table() below are not rendered. The Create/Edit/List
+     * pages extend the plain Page class with their own Blade views and Livewire
+     * props, so the real UI lives in resources/views/filament/resources/master-data/.
+     * They are kept in sync only so the next reader is not misled.
+     */
     public static function form(Form $form): Form
     {
         return $form
@@ -66,12 +105,13 @@ class WalletTypeResource extends Resource
                         Forms\Components\Select::make('type')
                             ->label('Type')
                             ->required()
-                            ->options([
-                                'bank'     => 'Bank',
-                                'e-wallet' => 'E-Wallet',
-                                'physical' => 'Physical',
-                                'others'   => 'Others',
-                            ]),
+                            ->options(self::types()),
+
+                        Forms\Components\Select::make('nature')
+                            ->label('Nature')
+                            ->required()
+                            ->default(self::NATURE_ASSET)
+                            ->options(self::natures()),
 
                         Forms\Components\Textarea::make('description')
                             ->label('Description')
@@ -107,7 +147,16 @@ class WalletTypeResource extends Resource
                         'primary'   => 'bank',
                         'success'   => 'e-wallet',
                         'warning'   => 'physical',
+                        'danger'    => self::TYPE_CREDIT_CARD,
                         'secondary' => 'others',
+                    ]),
+
+                Tables\Columns\BadgeColumn::make('nature')
+                    ->label('Nature')
+                    ->sortable()
+                    ->colors([
+                        'success' => self::NATURE_ASSET,
+                        'danger'  => self::NATURE_LIABILITY,
                     ]),
 
                 Tables\Columns\TextColumn::make('description')

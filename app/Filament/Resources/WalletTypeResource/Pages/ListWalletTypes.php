@@ -31,6 +31,7 @@ class ListWalletTypes extends Page
         ['key' => 'image',       'label' => 'Image',       'sortable' => false, 'type' => 'image'],
         ['key' => 'name',        'label' => 'Name',        'sortable' => true],
         ['key' => 'type',        'label' => 'Type',        'sortable' => true],
+        ['key' => 'nature',      'label' => 'Nature',      'sortable' => true],
         ['key' => 'description', 'label' => 'Description', 'sortable' => false],
         ['key' => 'createdAt',   'label' => 'Created',     'sortable' => true],
     ];

@@ -50,8 +50,14 @@
                                     <td class="fi-ta-cell px-3 py-4 sm:first-of-type:ps-6 sm:last-of-type:pe-6">
                                         @if (($column['type'] ?? '') === 'image')
                                             @php
+                                                // Prefer the uploaded logo. Types created before uploads
+                                                // existed have no icon_url, so fall back to the legacy
+                                                // name-derived Cloudinary path.
                                                 $slug = \Illuminate\Support\Str::slug($record['name'] ?? '');
-                                                $imageUrl = "https://res.cloudinary.com/dblibr1t2/image/upload/v1772780617/{$slug}.png";
+                                                $imageUrl =
+                                                    $record['icon_url'] ??
+                                                    '' ?:
+                                                    "https://res.cloudinary.com/dblibr1t2/image/upload/v1772780617/{$slug}.png";
                                             @endphp
                                             <img src="{{ $imageUrl }}" alt="{{ $record['name'] ?? '' }}"
                                                 class="h-8 object-contain"
